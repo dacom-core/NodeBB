@@ -58,7 +58,7 @@
     "upvoted": "Artı",
     "downvoters": "Eksi",
     "downvoted": "Eksi",
-    "views": "Görüntülenme",
+    "views": "Bakış",
     "reputation": "İtibar",
     "read_more": "daha fazla oku",
     "more": "Daha Fazla",
@@ -106,5 +106,6 @@
     "cookies.learn_more": "Daha Fazla",
     "edited": "Düzenlendi",
     "disabled": "Devre dışı",
-    "select": "Seç"
+    "select": "Seç",
+    "user-search-prompt": "Kullanıcı bulmak için buraya bir şeyler yazın ..."
 }

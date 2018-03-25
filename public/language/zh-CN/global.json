@@ -53,7 +53,7 @@
     "topics": "主题",
     "posts": "帖子",
     "best": "最佳",
-    "votes": "Votes",
+    "votes": "投票",
     "upvoters": "顶的人",
     "upvoted": "顶",
     "downvoters": "踩的人",
@@ -106,5 +106,6 @@
     "cookies.learn_more": "了解更多",
     "edited": "已编辑",
     "disabled": "禁用",
-    "select": "选择"
+    "select": "选择",
+    "user-search-prompt": "输入以查找用户"
 }

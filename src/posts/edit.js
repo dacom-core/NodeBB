@@ -12,6 +12,7 @@ var plugins = require('../plugins');
 var cache = require('./cache');
 var pubsub = require('../pubsub');
 var utils = require('../utils');
+var translator = require('../translator');
 
 module.exports = function (Posts) {
 	pubsub.on('post:edit', function (pid) {
@@ -19,6 +20,7 @@ module.exports = function (Posts) {
 	});
 
 	Posts.edit = function (data, callback) {
+		var oldContent;	// for diffing purposes
 		var postData;
 		var results;
 
@@ -38,6 +40,7 @@ module.exports = function (Posts) {
 				}
 
 				postData = _postData;
+				oldContent = postData.content;
 				postData.content = data.content;
 				postData.edited = Date.now();
 				postData.editor = data.uid;
@@ -61,6 +64,9 @@ module.exports = function (Posts) {
 			function (_results, next) {
 				results = _results;
 				Posts.setPostFields(data.pid, postData, next);
+			},
+			function (next) {
+				Posts.diffs.save(data.pid, oldContent, data.content, next);
 			},
 			function (next) {
 				postData.cid = results.topic.cid;
@@ -140,7 +146,7 @@ module.exports = function (Posts) {
 				db.setObject('topic:' + tid, results.topic, next);
 			},
 			function (next) {
-				topics.updateTags(tid, data.tags, next);
+				topics.updateTopicTags(tid, data.tags, next);
 			},
 			function (next) {
 				topics.getTopicTagsObjects(tid, next);
@@ -149,6 +155,7 @@ module.exports = function (Posts) {
 				topicData.tags = data.tags;
 				topicData.oldTitle = results.topic.title;
 				topicData.timestamp = results.topic.timestamp;
+				var renamed = translator.escape(validator.escape(String(title))) !== results.topic.title;
 				plugins.fireHook('action:topic.edit', { topic: topicData, uid: data.uid });
 				next(null, {
 					tid: tid,
@@ -158,7 +165,7 @@ module.exports = function (Posts) {
 					oldTitle: results.topic.title,
 					slug: topicData.slug,
 					isMainPost: true,
-					renamed: title !== results.topic.title,
+					renamed: renamed,
 					tags: tags,
 				});
 			},
